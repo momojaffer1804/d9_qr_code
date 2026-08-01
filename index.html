@@ -43,15 +43,15 @@
     align-items:center;
     gap:14px;
     margin-bottom: 32px;
-}
+  }
 
   .mark-dot{
-    height: 60px;
+    height: 80px;
     width: auto;
-    max-width: 200px;
+    max-width: 240px;
     object-fit: contain;
     flex-shrink:0;
-}
+  }
 
   .mark-name{
     font-size: 17px;
@@ -129,17 +129,22 @@
     padding: 14px;
     border: none;
     border-radius: 10px;
-    background: var(--sage-dark);
+    background: #C9CFC4;
     color:#fff;
     font-size: 15.5px;
     font-weight: 700;
     letter-spacing: 0.01em;
-    cursor:pointer;
-    transition: background 0.15s ease, transform 0.05s ease;
+    cursor:not-allowed;
+    transition: background 0.2s ease, transform 0.05s ease;
   }
 
-  button:hover{ background: var(--sage); }
-  button:active{ transform: scale(0.99); }
+  button.ready{
+    background: var(--sage-dark);
+    cursor:pointer;
+  }
+
+  button.ready:hover{ background: var(--sage); }
+  button.ready:active{ transform: scale(0.99); }
 
   .foot-note{
     text-align:center;
@@ -185,12 +190,12 @@
 
   <div id="formScreen">
     <div class="mark">
-  <img src="images/logo.png" alt="D9 Skincare" class="mark-dot">
-  <div>
-    <div class="mark-name"></div>
-    <div class="mark-sub"></div>
-  </div>
-</div>
+      <img src="images/logo.png" alt="D9 Skincare" class="mark-dot">
+      <div>
+        <div class="mark-name"></div>
+        <div class="mark-sub"></div>
+      </div>
+    </div>
 
     <h1>Kindly share your details to help us arrange samples</h1>
     <p class="lede"></p>
@@ -199,22 +204,21 @@
       <input type="hidden" name="form-name" value="d9-registration">
       <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
 
-         <div class="field">
+      <div class="field">
         <label for="name">Full Name</label>
         <input type="text" id="name" name="Full Name" placeholder="Enter your full name"
           pattern="[A-Za-z ]+" required
           oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^A-Za-z ]/g, '')"
           oninvalid="this.setCustomValidity('Name should only contain letters and spaces')">
       </div>
-      
 
       <div class="field">
-  <label for="mobile">Mobile Number</label>
-  <input type="tel" id="mobile" name="Mobile Number" placeholder="10-digit mobile number"
-    pattern="[0-9]{10}" maxlength="10" inputmode="numeric" required
-    oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^0-9]/g, '')"
-    oninvalid="this.setCustomValidity('Please enter a valid 10-digit mobile number')">
-</div>
+        <label for="mobile">Mobile Number</label>
+        <input type="tel" id="mobile" name="Mobile Number" placeholder="10-digit mobile number"
+          pattern="[0-9]{10}" maxlength="10" inputmode="numeric" required
+          oninput="this.setCustomValidity(''); this.value = this.value.replace(/[^0-9]/g, '')"
+          oninvalid="this.setCustomValidity('Please enter a valid 10-digit mobile number')">
+      </div>
 
       <div class="field">
         <label for="city">City</label>
@@ -226,17 +230,17 @@
         <select id="product" name="Product Interest" required onchange="toggleOther()">
           <option value="" disabled selected>Select a product</option>
           <option value="A">Hairblendz Kit</option>
-          <option value="B">Brilliance lipo tab </option>
+          <option value="B">Brilliance lipo tab</option>
           <option value="C">SR gummies</option>
           <option value="D">Problendz protein</option>
-          
+          <option value="Other">Other</option>
         </select>
         <div id="otherWrap">
           <input type="text" id="otherProduct" name="Other Product" placeholder="Please specify">
         </div>
       </div>
 
-      <button type="submit">Register Now</button>
+      <button type="submit" id="submitBtn">Register Now</button>
     </form>
 
     <p class="foot-note">Your details are collected only for D9 Skincare follow-up and we do not spam</p>
@@ -259,6 +263,19 @@
     var val = document.getElementById('product').value;
     document.getElementById('otherWrap').style.display = (val === 'Other') ? 'block' : 'none';
   }
+
+  function checkFormReady(){
+    var form = document.getElementById('regForm');
+    var btn = document.getElementById('submitBtn');
+    if(form.checkValidity()){
+      btn.classList.add('ready');
+    } else {
+      btn.classList.remove('ready');
+    }
+  }
+
+  document.getElementById('regForm').addEventListener('input', checkFormReady);
+  document.getElementById('regForm').addEventListener('change', checkFormReady);
 
   document.getElementById('regForm').addEventListener('submit', function(e){
     e.preventDefault();
